@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Create New User</h2>
+<form method="post" class="mt-4">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label for="{{ form.username.id_for_label }}">Username:</label>
+        <input type="text" class="form-control" id="{{ form.username.id_for_label }}" name="{{ form.username.name }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.full_name.id_for_label }}">Full Name:</label>
+        <input type="text" class="form-control" id="{{ form.full_name.id_for_label }}" name="{{ form.full_name.name }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.phone_number.id_for_label }}">Phone Number:</label>
+        <input type="text" class="form-control" id="{{ form.phone_number.id_for_label }}" name="{{ form.phone_number.name }}">
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.password.id_for_label }}">Password:</label>
+        <input type="password" class="form-control" id="{{ form.password.id_for_label }}" name="{{ form.password.name }}" required>
+    </div>
+
+    <!-- Если у вас есть другие поля, добавьте их аналогичным образом -->
+
+    <button type="submit" class="btn btn-primary mt-2">Create User</button>
+</form>
+{% endblock %}

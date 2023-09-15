@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}
+Home - Call Manager
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3>Call Manager</h3>
+            </div>
+            <div class="card-body text-center">
+                {% if recipient %}
+                <h4>{{ recipient.phone_number }}</h4>
+                <button class="btn btn-primary" data-toggle="collapse" data-target="#recipientDetails">Info</button>
+
+                <div id="recipientDetails" class="collapse mt-3">
+
+                        <table class="table table-bordered">
+                            <tbody>
+                            <tr>
+                                <th><i class="fas fa-user"></i> Name</th>
+                                <td>{{ recipient.name }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-phone-alt"></i> Phone</th>
+                                <td>{{ recipient.phone_number }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-map-marker-alt"></i> State</th>
+                                <td>{{ recipient.state }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-building"></i> Place</th>
+                                <td>{{ recipient.place }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-calendar-day"></i> Date of Distribution</th>
+                                <td>{{ recipient.date_distribution }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-venus-mars"></i> Gender</th>
+                                <td>{{ recipient.get_gender_display }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-birthday-cake"></i> Age</th>
+                                <td>{{ recipient.age }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-hands-helping"></i> Volunteer</th>
+                                <td>{{ recipient.volunteer }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-gift"></i> Received goods</th>
+                                <td>
+                                    <ul>
+                                        {% for item in recipient.items_received.all %}
+                                        <li>{{ item.name }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Контейнер для кнопок -->
+                        <div class="button-group">
+                            <!-- Contacted button -->
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="action_type" value="contacted">
+                                <input type="hidden" name="recipient_id" value="{{ recipient.id }}">
+                                <button type="submit" class="btn btn-success">Contacted</button>
+                            </form>
+
+                            <!-- Call Back button -->
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="action_type" value="callback">
+                                <input type="hidden" name="recipient_id" value="{{ recipient.id }}">
+                                <button type="submit" class="btn btn-purple">Call Back</button>
+                            </form>
+                            <!-- Invalid number button -->
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="action_type" value="invalid_number">
+                                <input type="hidden" name="recipient_id" value="{{ recipient.id }}">
+                                <button type="submit" class="btn btn-secondary">Invalid Number</button>
+                            </form>
+
+                            <!-- Dont Want button -->
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="action_type" value="refused">
+                                <input type="hidden" name="recipient_id" value="{{ recipient.id }}">
+                                <button type="submit" class="btn btn-danger">Dont Want</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Get another number button -->
+                    <form method="post" class="mt-3">
+                        {% csrf_token %}
+                        <input type="hidden" name="action_type" value="get_number">
+                        <button type="submit" class="btn btn-warning">Get another number</button>
+                    </form>
+
+                    {% else %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action_type" value="get_number">
+                        <button type="submit" class="btn btn-success">Get number</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

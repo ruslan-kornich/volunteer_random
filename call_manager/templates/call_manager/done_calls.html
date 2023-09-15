@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}
+Done Calls
+{% endblock %}
+
+{% block content %}
+<style>
+    .message {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+    .message-icon {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #34b7f1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+    }
+    .message-body {
+    border: 1px solid #e8e8e8;
+    border-radius: 15px;
+    padding: 20px 35px;  /* увеличиваем отступы внутри блока для большего пространства */
+    background-color: #f5f5f5;
+    position: relative;
+    width: 90%;  /* задаем фиксированную ширину в 90% */
+    margin: 0 auto;  /* центрируем блок сообщения */
+    min-height: 80px;  /* задаем минимальную высоту */
+}
+.message-time {
+    position: absolute;
+    right: 30px;  /* увеличиваем отступ справа */
+    bottom: 15px;  /* увеличиваем отступ снизу */
+    font-size: 0.9em;
+}
+
+
+
+
+
+
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2 class="text-center mb-5">Done Calls</h2>
+        <div class="messages">
+            {% for call in recipients %}
+            <div class="message">
+                <div class="message-icon">
+                    <i class="fas fa-phone-alt text-white"></i> <!-- иконка телефонной трубки -->
+                </div>
+                <div class="message-body">
+                    <div class="message-header mb-2">
+                        <strong>{{ call.last_updated_by.full_name }}</strong>
+                    </div>
+                    {{ call.name }} - {{ call.phone_number }}
+                    <div class="message-time">
+                        <small>{{ call.done_at|date:"d M Y, H:i" }}</small>
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination buttons -->
+        <div class="mt-3">
+            <span class="step-links">
+                {% if recipients.has_previous %}
+                    <a href="?page=1" class="btn btn-primary">First</a>
+                    <a href="?page={{ recipients.previous_page_number }}" class="btn btn-primary">Previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ recipients.number }} of {{ recipients.paginator.num_pages }}.
+                </span>
+
+                {% if recipients.has_next %}
+                    <a href="?page={{ recipients.next_page_number }}" class="btn btn-primary">Next</a>
+                    <a href="?page={{ recipients.paginator.num_pages }}" class="btn btn-primary">Last</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+</div>
+{% endblock %}

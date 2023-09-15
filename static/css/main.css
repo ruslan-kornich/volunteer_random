@@ -1,0 +1,37 @@
+
+.btn-purple {
+    background-color: #800080; /* Код цвета фиолетового */
+    border-color: #800080;
+    color: #ffffff; /* Белый цвет текста на фиолетовом фоне */
+}
+
+/* Добавляем стили для состояния hover */
+.btn-purple:hover {
+    background-color: #660066;
+    border-color: #660066;
+}
+.button-group {
+    display: flex; /* Устанавливаем flexbox */
+    justify-content: space-between; /* Распределяем элементы с равными промежутками между ними */
+}
+
+.button-group form {
+    margin: 0; /* Удаляем отступы у форм */
+}
+
+.button-group .btn {
+    margin: 0 2px; /* Добавляем небольшие отступы между кнопками */
+}
+.card.bg-purple {
+    background-color: #6a1b9a !important;
+}
+.number-details {
+        position: relative;
+    }
+.date-position {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 0.8rem;
+    color: #888;
+    }
