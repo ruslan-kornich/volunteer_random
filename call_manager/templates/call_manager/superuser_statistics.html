@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}
+Personality Statistics
+{% endblock %}
+
+{% block content %}
+<style>
+    /* Стили для таблицы и ячеек */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid #d1d1d1;
+        padding: 8px 12px;
+        text-align: center;
+        font-weight: bold; /* Жирный шрифт */
+    }
+
+    th.name-cell, td.name-cell {
+        text-align: left;
+    }
+
+    /* Стили для различных столбцов */
+    td.today-calls-cell {
+        background-color: #c3e6cb; /* зеленый */
+    }
+
+    td.callbacks-cell {
+        background-color: #9370DB; /* фиолетовый */
+    }
+
+    td.wrong-numbers-cell {
+        background-color: #d6d6d6; /* серый */
+    }
+
+    td.refused-cell {
+        background-color: #f5c6cb; /* светло-красный */
+    }
+
+    /* Адаптивный размер шрифта */
+    @media (max-width: 768px) {
+        table {
+            font-size: 12px;
+        }
+    }
+
+</style>
+
+<!-- Форма для выбора даты -->
+<form method="get" class="mb-3">
+    <div class="form-group">
+        {{ form.date.label_tag }} {{ form.date }}
+    </div>
+    <button type="submit" class="btn btn-primary">Show Statistics</button>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th scope="col" class="name-cell">User</th>
+            <th scope="col">Done Calls</th>
+            <th scope="col">Callbacks</th>
+            <th scope="col">Wrong Numbers</th>
+            <th scope="col">Refused</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user, stats in statistics.items %}
+        <tr>
+            <td class="name-cell">{{ user.full_name }}</td>
+            <td class="today-calls-cell"><i class="fas fa-phone"></i> {{ stats.done_calls }}</td>
+            <td class="callbacks-cell"><i class="fas fa-redo"></i> {{ stats.callbacks }}</td>
+            <td class="wrong-numbers-cell"><i class="fas fa-times"></i> {{ stats.wrong_numbers }}</td>
+            <td class="refused-cell"><i class="fas fa-user-slash"></i> {{ stats.refused }}</td>
+        </tr>
+        {% endfor %}
+        <!-- Эта часть добавляет строку "Итого" -->
+        <tr style="background-color: #f0f0f0;">
+            <td class="name-cell"><strong>Sum</strong></td>
+            <td class="today-calls-cell"><i class="fas fa-phone"></i> <strong>{{ total.done_calls }}</strong></td>
+            <td class="callbacks-cell"><i class="fas fa-redo"></i> <strong>{{ total.callbacks }}</strong></td>
+            <td class="wrong-numbers-cell"><i class="fas fa-times"></i> <strong>{{ total.wrong_numbers }}</strong></td>
+            <td class="refused-cell"><i class="fas fa-user-slash"></i> <strong>{{ total.refused }}</strong></td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -10,10 +10,13 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'fav/favicon.png' %}">
 
 
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% block extra_css %}{% endblock %}
+
 
 
 </head>
@@ -27,16 +30,31 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'index' %}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://ee-eu.kobotoolbox.org/x/qG6jAl5d" target="_blank">Form</a>
+            </li>
+
 
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'statistic_view' %}">Statistic</a>
             </li>
+            {% if user.is_authenticated and user.is_superuser %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'superuser_statistics' %}">Personality</a>
+            </li>
+            {% endif %}
+
 
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'done_calls' %}">Done Calls</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'callback_view' %}">Call Back <span id="callback-notification" class="badge badge-light" style="display: none;"></span></a>
+                <a class="nav-link" href="{% url 'callback_view' %}">Call Back <span id="callback-notification"
+                                                                                     class="badge badge-light"
+                                                                                     style="display: none;"></span></a>
             </li>
             <!-- Другие пункты меню, если потребуются -->
             {% if user.is_authenticated %}
@@ -46,14 +64,13 @@
                     <i class="fas fa-user"></i> {{ user.username }}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="{% url 'accounts:logout' %}">Выйти</a>
+                    <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
                 </div>
             </li>
             {% endif %}
         </ul>
     </div>
 </nav>
-
 
 
 <div class="container mt-5">
@@ -66,7 +83,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 
 
 </body>

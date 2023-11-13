@@ -1,7 +1,7 @@
 from django.utils.timezone import localtime
 from .models import Recipient
 from django.utils import timezone
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.core.paginator import Paginator
 from datetime import date
 from django.db import transaction
@@ -11,7 +11,10 @@ from datetime import datetime, timedelta
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import CustomUser
-from .forms import CallbackForm
+from .forms import CallbackForm, DateSelectForm
+
+from .models import CustomUser, Recipient
+from datetime import date
 
 
 @login_required
@@ -145,7 +148,7 @@ def callback_view(request):
             "call_back_time": localtime(number.call_back_time).strftime(
                 "%Y-%m-%d %H:%M:%S"
             ),
-            "updated_by": number.last_updated_by.username,
+            "updated_by": number.last_updated_by.full_name,
             "done_at": localtime(number.done_at).strftime("%H:%M %d.%m.%Y")
             if number.done_at
             else None,
@@ -177,16 +180,16 @@ def statistic_view(request):
     # Today's statistics
     today = date.today()
     done_calls_today = base_query.filter(
-        call_status="done", created_at__date=today
+        call_status="done", done_at__date=today
     ).count()
     callbacks_today = base_query.filter(
-        call_status="call_back", created_at__date=today
+        call_status="call_back", done_at__date=today
     ).count()
     invalid_numbers_today = base_query.filter(
-        call_status="invalid_number", created_at__date=today
+        call_status="invalid", done_at__date=today
     ).count()
     refused_calls_today = base_query.filter(
-        call_status="refused", created_at__date=today
+        call_status="refused", done_at__date=today
     ).count()
 
     context = {
@@ -200,3 +203,52 @@ def statistic_view(request):
         "refused_calls_today": refused_calls_today,
     }
     return render(request, "call_manager/statistic.html", context)
+
+
+from accounts.models import CustomUser
+from .models import Recipient
+from .forms import DateSelectForm  # убедитесь, что импортировали форму
+
+
+def call_statistics(request):
+    selected_date = request.GET.get('date')
+
+    # Получим всех активных пользователей и сформируем начальную статистику для каждого из них
+    users = CustomUser.objects.filter(is_active=True, is_superuser=False)
+    user_stats = {user: {'done_calls': 0, 'callbacks': 0, 'wrong_numbers': 0, 'refused': 0} for user in users}
+
+    if selected_date:
+        recipients = Recipient.objects.filter(done_at__date=selected_date,
+                                              call_status__in=['done', 'refused', 'invalid', 'call_back'])
+    else:
+        recipients = Recipient.objects.exclude(call_status='waiting')
+
+    total_stats = {'done_calls': 0, 'callbacks': 0, 'wrong_numbers': 0, 'refused': 0}
+
+    for recipient in recipients:
+        user = recipient.last_updated_by
+        if user and user in user_stats:
+            if recipient.call_status == 'done':
+                user_stats[user]['done_calls'] += 1
+                total_stats['done_calls'] += 1
+            elif recipient.call_status == 'call_back':
+                user_stats[user]['callbacks'] += 1
+                total_stats['callbacks'] += 1
+            elif recipient.call_status == 'invalid':
+                user_stats[user]['wrong_numbers'] += 1
+                total_stats['wrong_numbers'] += 1
+            elif recipient.call_status == 'refused':
+                user_stats[user]['refused'] += 1
+                total_stats['refused'] += 1
+
+    form = DateSelectForm(request.GET or None)
+
+    return render(request, 'call_manager/superuser_statistics.html', {
+        'statistics': user_stats,
+        'form': form,
+        'selected_date': selected_date,
+        'total': total_stats  # передаем статистику итогов в контекст
+    })
+
+
+

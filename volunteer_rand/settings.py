@@ -10,7 +10,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 DEBUG = env("DEBUG")
 SECRET_KEY = env("SECRET_KEY")
 
-ALLOWED_HOSTS = ["192.168.50.100", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["192.168.50.100", "localhost", "127.0.0.1", "192.168.2.100"]
 
 # Application definition
 
@@ -89,7 +89,7 @@ USE_I18N = True
 STATIC_URL = "static/"
 
 STATICFILES_DIRS = [
-    r"C:\Users\Admin\Desktop\volunteer_random\static",
+    r"C:\Users\ruslan\Desktop\volunteer_random\static",
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # Default primary key field type

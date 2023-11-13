@@ -6,6 +6,9 @@ class Item(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Recipient(models.Model):
     CALL_STATUSES = (
@@ -15,7 +18,7 @@ class Recipient(models.Model):
         ("invalid", "Invalid Number"),
         ("call_back", "Call Back"),
     )
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, blank=True, null=True)
     phone_number = models.CharField(max_length=20, unique=True)
     items_received = models.ManyToManyField(Item)
     call_status = models.CharField(
@@ -49,3 +52,6 @@ class Recipient(models.Model):
         related_name="updated_recipients",
     )
     call_back_time = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return self.phone_number

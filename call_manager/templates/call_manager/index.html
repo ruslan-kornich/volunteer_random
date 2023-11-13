@@ -3,17 +3,34 @@
 {% block title %}
 Home - Call Manager
 {% endblock %}
+{% block extra_css %}
+<style>
+    @media (max-width: 767px) {
+        .btn {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        /* Убрать внешние отступы у карточки на мобильных устройствах */
+        .card {
+            margin: 0;
+            border-radius: 0;
+        }
+    }
+</style>
+{% endblock %}
+
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-12 col-md-6">
         <div class="card">
             <div class="card-header text-center">
                 <h3>Call Manager</h3>
             </div>
             <div class="card-body text-center">
                 {% if recipient %}
-                <h4>{{ recipient.phone_number }}</h4>
+                <h4 id="phoneNumber">{{ recipient.phone_number }} <i class="fas fa-copy" onclick="copyToClipboard()"></i></h4>
+
                 <button class="btn btn-primary" data-toggle="collapse" data-target="#recipientDetails">Info</button>
 
                 <div id="recipientDetails" class="collapse mt-3">
@@ -29,15 +46,15 @@ Home - Call Manager
                                 <td>{{ recipient.phone_number }}</td>
                             </tr>
                             <tr>
-                                <th><i class="fas fa-map-marker-alt"></i> State</th>
+                                <th><i class="fas fa-map-marker-alt"></i> Oblast</th>
                                 <td>{{ recipient.state }}</td>
                             </tr>
                             <tr>
-                                <th><i class="fas fa-building"></i> Place</th>
+                                <th><i class="fas fa-building"></i> City (Place)</th>
                                 <td>{{ recipient.place }}</td>
                             </tr>
                             <tr>
-                                <th><i class="fas fa-calendar-day"></i> Date of Distribution</th>
+                                <th><i class="fas fa-calendar-day"></i> Date distrib</th>
                                 <td>{{ recipient.date_distribution }}</td>
                             </tr>
                             <tr>
@@ -49,7 +66,7 @@ Home - Call Manager
                                 <td>{{ recipient.age }}</td>
                             </tr>
                             <tr>
-                                <th><i class="fas fa-hands-helping"></i> Volunteer</th>
+                                <th><i class="fas fa-hands-helping"></i> Volunteers</th>
                                 <td>{{ recipient.volunteer }}</td>
                             </tr>
                             <tr>
@@ -68,35 +85,43 @@ Home - Call Manager
                         <!-- Контейнер для кнопок -->
                         <div class="button-group">
                             <!-- Contacted button -->
+
                             <form method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="action_type" value="contacted">
                                 <input type="hidden" name="recipient_id" value="{{ recipient.id }}">
-                                <button type="submit" class="btn btn-success">Contacted</button>
+                                <button type="submit" class="btn btn-success">Received</button>
                             </form>
 
+
                             <!-- Call Back button -->
+
                             <form method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="action_type" value="callback">
                                 <input type="hidden" name="recipient_id" value="{{ recipient.id }}">
                                 <button type="submit" class="btn btn-purple">Call Back</button>
                             </form>
+
                             <!-- Invalid number button -->
+
                             <form method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="action_type" value="invalid_number">
                                 <input type="hidden" name="recipient_id" value="{{ recipient.id }}">
-                                <button type="submit" class="btn btn-secondary">Invalid Number</button>
+                                <button type="submit" class="btn btn-secondary">Invalid number</button>
                             </form>
 
+
                             <!-- Dont Want button -->
+
                             <form method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="action_type" value="refused">
                                 <input type="hidden" name="recipient_id" value="{{ recipient.id }}">
                                 <button type="submit" class="btn btn-danger">Dont Want</button>
                             </form>
+
                         </div>
                     </div>
 
@@ -111,11 +136,45 @@ Home - Call Manager
                     <form method="post">
                         {% csrf_token %}
                         <input type="hidden" name="action_type" value="get_number">
-                        <button type="submit" class="btn btn-success">Get number</button>
+                        <button type="submit" class="btn btn-success">Get a number</button>
                     </form>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
-    {% endblock %}
+<!-- Bootstrap Toast для уведомления -->
+    <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
+        <div class="toast" style="position: absolute; top: 0; right: 0;">
+            <div class="toast-header">
+                <strong class="mr-auto">Сповіщення</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body">
+                Номер скопійовано!
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function copyToClipboard() {
+        let phoneNumber = document.getElementById("phoneNumber").textContent.trim();
+
+        let textArea = document.createElement("textarea");
+        textArea.value = phoneNumber;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+
+        $('.toast').toast({ delay: 2000 });
+        $('.toast').toast('show');
+    }
+</script>
+{% endblock %}
+
+

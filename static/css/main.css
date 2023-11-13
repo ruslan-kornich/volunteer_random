@@ -25,9 +25,9 @@
 .card.bg-purple {
     background-color: #6a1b9a !important;
 }
-.number-details {
-        position: relative;
-    }
+
+
+
 .date-position {
     position: absolute;
     top: 0;
@@ -35,3 +35,6 @@
     font-size: 0.8rem;
     color: #888;
     }
+
+
+

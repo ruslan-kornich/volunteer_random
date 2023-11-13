@@ -1,5 +1,7 @@
 db.sqlite3
-
+backup/db_backup.sqlite3
+backup
+static/data
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

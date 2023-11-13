@@ -5,57 +5,13 @@ Statistics - Call Manager
 {% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
 
-     <!-- Done Calls Card -->
-    <div class="col-md-3">
-        <div class="card bg-success mb-3"> <!-- Заменено на bg-success -->
-            <div class="card-body text-center">
-                <h3 class="card-title">{{ done_calls }}</h3>
-                <p class="card-text">Done Calls</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Callbacks Card -->
-    <div class="col-md-3">
-        <div class="card text-white bg-purple mb-3">
-            <div class="card-body text-center">
-                <h3 class="card-title">{{ callbacks }}</h3>
-                <p class="card-text">Callbacks</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Invalid Numbers Card -->
-    <div class="col-md-3">
-        <div class="card text-white bg-secondary mb-3">
-            <div class="card-body text-center">
-                <h3 class="card-title">{{ invalid_numbers }}</h3>
-                <p class="card-text">Invalid Numbers</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Refused Calls Card -->
-    <div class="col-md-3">
-        <div class="card text-white bg-danger mb-3">
-            <div class="card-body text-center">
-                <h3 class="card-title">{{ refused_calls }}</h3>
-                <p class="card-text">Refused Calls</p>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<div class="text-center mt-5 mb-3"> <!-- добавлен класс text-center -->
+<div class="text-center mt-3 mb-3">
     <h3>Today's Statistics</h3>
 </div>
 
 <div class="row justify-content-center">
-
-        <!-- Done Calls Today Card -->
+    <!-- Done Calls Today Card -->
     <div class="col-md-3">
         <div class="card bg-success mb-3">
             <div class="card-body text-center">
@@ -96,7 +52,50 @@ Statistics - Call Manager
     </div>
 </div>
 
+<div class="text-center mt-5 mb-3">
+    <h3>All Statistics</h3>
+</div>
+
+<div class="row justify-content-center">
+    <!-- Done Calls Card -->
+    <div class="col-md-3">
+        <div class="card bg-success mb-3">
+            <div class="card-body text-center">
+                <h3 class="card-title">{{ done_calls }}</h3>
+                <p class="card-text">Done Calls</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Callbacks Card -->
+    <div class="col-md-3">
+        <div class="card text-white bg-purple mb-3">
+            <div class="card-body text-center">
+                <h3 class="card-title">{{ callbacks }}</h3>
+                <p class="card-text">Callbacks</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invalid Numbers Card -->
+    <div class="col-md-3">
+        <div class="card text-white bg-secondary mb-3">
+            <div class="card-body text-center">
+                <h3 class="card-title">{{ invalid_numbers }}</h3>
+                <p class="card-text">Invalid Numbers</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Refused Calls Card -->
+    <div class="col-md-3">
+        <div class="card text-white bg-danger mb-3">
+            <div class="card-body text-center">
+                <h3 class="card-title">{{ refused_calls }}</h3>
+                <p class="card-text">Refused Calls</p>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
-
-

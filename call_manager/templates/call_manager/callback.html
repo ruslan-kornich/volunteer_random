@@ -5,48 +5,44 @@ Call Back List - Call Manager
 {% endblock %}
 
 {% block content %}
-
-
 <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-8"> <!-- Ширина контейнера -->
         <div class="card">
             <div class="card-header text-center">
-                <h3>Call Back List</h3>
+                <h3>List Callbacks</h3>
             </div>
             <div class="card-body text-center">
-
                 {% for number in callback_numbers %}
-                <div class="number-details">
-                    <h4>{{ number.phone_number }}</h4>
-                    <span class="date-position">{{ number.done_at }}</span>
-                </div>
+                <div class="number-container" style="position: relative; margin-bottom: 20px; padding: 30px 20px; height: auto; border-radius: 25px; background-color: #f5f5f5;"> <!-- Увеличил паддинги и убрал фиксированную высоту -->
 
+                    <span class="user-position" style="position: absolute; top: 10px; left: 10px;">{{ number.updated_by }}</span>
+                    <span class="date-position" style="position: absolute; top: 10px; right: 10px;">{{ number.done_at }}</span>
+                    <h4 id="phoneNumber" class="text-center" style="margin-top: 20px;">{{ number.phone_number }} </h4>
+                    <div class="text-center">
+                        <button class="btn btn-primary" data-toggle="collapse" data-target="#details{{ number.form.recipient_id.value }}">Інфо</button>
+                    </div>
 
-                <button class="btn btn-primary" data-toggle="collapse"
-                        data-target="#details{{ number.form.recipient_id.value }}">Info
-                </button>
-
-                <div id="details{{ number.form.recipient_id.value }}" class="collapse mt-3">
-                    <table class="table table-bordered">
-                        <tbody>
-                        <tr>
-                            <th><i class="fas fa-user"></i> Name</th>
-                            <td>{{ number.recipient.name }}</td>
-                        </tr>
-                        <tr>
-                            <th><i class="fas fa-phone-alt"></i> Phone</th>
-                            <td>{{ number.phone_number }}</td>
-                        </tr>
-                        <tr>
-                            <th><i class="fas fa-map-marker-alt"></i> State</th>
-                            <td>{{ number.recipient.state }}</td>
-                        </tr>
-                        <tr>
-                                <th><i class="fas fa-building"></i> Place</th>
+                    <div id="details{{ number.form.recipient_id.value }}" class="collapse mt-3">
+                        <table class="table table-bordered">
+                            <tbody>
+                            <tr>
+                                <th><i class="fas fa-user"></i> Name</th>
+                                <td>{{ number.recipient.name }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-phone-alt"></i> Phone</th>
+                                <td>{{ number.phone_number }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-map-marker-alt"></i> Oblast</th>
+                                <td>{{ number.recipient.state }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-building"></i> City (place)</th>
                                 <td>{{ number.recipient.place }}</td>
                             </tr>
                             <tr>
-                                <th><i class="fas fa-calendar-day"></i> Date of Distribution</th>
+                                <th><i class="fas fa-calendar-day"></i> Date distr</th>
                                 <td>{{ number.recipient.date_distribution }}</td>
                             </tr>
                             <tr>
@@ -58,11 +54,11 @@ Call Back List - Call Manager
                                 <td>{{ number.recipient.age }}</td>
                             </tr>
                             <tr>
-                                <th><i class="fas fa-hands-helping"></i> Volunteer</th>
+                                <th><i class="fas fa-hands-helping"></i> Volunteers</th>
                                 <td>{{ number.recipient.volunteer }}</td>
                             </tr>
                             <tr>
-                                <th><i class="fas fa-gift"></i> Received goods</th>
+                                <th><i class="fas fa-gift"></i> Items</th>
                                 <td>
                                     <ul>
                                         {% for item in number.recipient.items_received.all %}
@@ -71,52 +67,58 @@ Call Back List - Call Manager
                                     </ul>
                                 </td>
                             </tr>
-                        <!-- И так далее для каждого поля -->
-                        </tbody>
-                    </table>
+                            <!-- И так далее для каждого поля -->
+                            </tbody>
+                        </table>
 
-                    <!-- Контейнер для кнопок -->
-                    <div class="button-group">
-                        <!-- Contacted button -->
-                        <form method="post" action="{% url 'callback_view' %}">
-                            {% csrf_token %}
-                            {{ number.form.recipient_id.as_hidden }}
-                            <button type="submit" class="btn btn-success" name="new_status" value="done">Contacted
-                            </button>
-                        </form>
+                        <!-- Контейнер для кнопок -->
+                        <div class="button-group text-center">
 
-                        <!-- Call Back button -->
-                        <form method="post" action="{% url 'callback_view' %}">
-                            {% csrf_token %}
-                            {{ number.form.recipient_id.as_hidden }}
-                            <button type="submit" class="btn btn-purple" name="new_status" value="call_back">Call Back
-                            </button>
-                        </form>
+                            <!-- Contacted button -->
+                            <form method="post" action="{% url 'callback_view' %}">
+                                {% csrf_token %}
+                                {{ number.form.recipient_id.as_hidden }}
+                                <button type="submit" class="btn btn-success" name="new_status" value="done">Received
+                                </button>
+                            </form>
 
-                        <!-- Don't Want button -->
-                        <form method="post" action="{% url 'callback_view' %}">
-                            {% csrf_token %}
-                            {{ number.form.recipient_id.as_hidden }}
-                            <button type="submit" class="btn btn-danger" name="new_status" value="refused">Don't Want
-                            </button>
-                        </form>
+                            <!-- Call Back button -->
+                            <form method="post" action="{% url 'callback_view' %}">
+                                {% csrf_token %}
+                                {{ number.form.recipient_id.as_hidden }}
+                                <button type="submit" class="btn btn-purple" name="new_status" value="call_back">Call Back
 
+                                </button>
+                            </form>
+
+                            <!-- Don't Want button -->
+                            <form method="post" action="{% url 'callback_view' %}">
+                                {% csrf_token %}
+                                {{ number.form.recipient_id.as_hidden }}
+                                <button type="submit" class="btn btn-danger" name="new_status" value="refused">Dont want
+                                </button>
+                            </form>
+
+
+
+                        </div>
                     </div>
                 </div>
                 {% empty %}
-                <p>No numbers for callback at the moment.</p>
+                <p class="text-center">There are currently no callback numbers available.</p>
                 {% endfor %}
+
                 {% if messages %}
-                <div class="messages">
+                <div class="messages text-center">
                     {% for message in messages %}
                     <p class="{{ message.tags }}">{{ message }}</p>
                     {% endfor %}
                 </div>
                 {% endif %}
-
             </div>
         </div>
     </div>
 </div>
 
 {% endblock %}
+
